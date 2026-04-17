@@ -1,0 +1,15 @@
+{
+  "slug": "kora",
+  "name": "Kora",
+  "created_at": "2026-04-17T16:28:23.642733",
+  "departments": [
+    "marketing",
+    "comercial",
+    "vendas",
+    "comunicacao",
+    "sac",
+    "financeiro"
+  ],
+  "status": "active",
+  "tasks": []
+}

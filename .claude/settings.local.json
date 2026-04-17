@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:openclaw.ai)",
+      "Bash(pip install:*)",
+      "Bash(python jarvis.py)",
+      "Bash(python -c \"from core.jarvis_brain import JarvisBrain; print\\('OK — Jarvis carregado sem erros'\\)\")",
+      "Bash(python -c ':*)",
+      "Bash(python -m chainlit run app.py --port 8000 --headless)",
+      "Bash(del \"C:\\\\Users\\\\Gustavo\\\\Desktop\\\\GFV_holding\\\\start_jarvis.bat\")",
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(gh --version)",
+      "Bash(supabase --version)",
+      "Bash(git config:*)",
+      "Bash(winget --version)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
