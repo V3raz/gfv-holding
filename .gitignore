@@ -10,6 +10,7 @@ projects/*/memory/
 
 # Repos dos projetos (cada um tem seu próprio git)
 projects/kora/src/
+projects/lagom_gestao/frontend/
 
 # Python
 __pycache__/
