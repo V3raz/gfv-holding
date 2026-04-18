@@ -3,6 +3,11 @@
 *.env
 .env.local
 
+# Configurações com credenciais reais (mantidos localmente)
+projects/*/frontend/js/config.js
+projects/*/memory/
+**/agent_state.json
+
 # Python
 __pycache__/
 *.py[cod]

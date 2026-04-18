@@ -2,12 +2,16 @@ import os
 from crewai import Agent, Task, Crew, Process
 
 
+# ── Modelos ────────────────────────────────────────────────────────────────────
+# Troque para "groq/llama-3.3-70b-versatile" se quiser usar Groq (free tier generoso)
+# Troque para "gemini/gemini-1.5-flash" para quota maior no free tier do Gemini
+
 def get_manager_llm():
-    return "gemini/gemini-2.5-flash"
+    return os.getenv("MANAGER_LLM", "gemini/gemini-2.5-flash")
 
 
 def get_junior_llm():
-    return "gemini/gemini-2.5-flash"
+    return os.getenv("JUNIOR_LLM", "gemini/gemini-2.5-flash")
 
 
 class BaseCrew:
@@ -16,6 +20,14 @@ class BaseCrew:
         self.department = department
         # CrewAI usa GEMINI_API_KEY via LiteLLM
         os.environ.setdefault("GEMINI_API_KEY", os.getenv("GOOGLE_API_KEY", ""))
+        # AgentOps — monitoramento visual dos crews (ative adicionando AGENTOPS_API_KEY no .env)
+        agentops_key = os.getenv("AGENTOPS_API_KEY")
+        if agentops_key:
+            try:
+                import agentops
+                agentops.init(agentops_key, default_tags=[project_name, department])
+            except ImportError:
+                pass  # agentops nao instalado, sem problema
 
     def _make_manager(self, role: str, goal: str, backstory: str) -> Agent:
         return Agent(
