@@ -60,6 +60,11 @@ class ProjectManager:
         with open(config_path, "r", encoding="utf-8") as f:
             return json.load(f)
 
+    def get_project_path(self, slug: str) -> str | None:
+        """Retorna o caminho absoluto da pasta do projeto, ou None se não existir."""
+        path = os.path.join(PROJECTS_DIR, slug)
+        return path if os.path.isdir(path) else None
+
     def add_task(self, slug: str, department: str, description: str) -> bool:
         config_path = os.path.join(PROJECTS_DIR, slug, "config.json")
         if not os.path.exists(config_path):
