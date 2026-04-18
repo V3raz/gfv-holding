@@ -55,5 +55,20 @@ CREATE INDEX IF NOT EXISTS idx_pedidos_cliente     ON pedidos(cliente_id);
 CREATE INDEX IF NOT EXISTS idx_itens_pedido_id     ON itens_pedido(pedido_id);
 CREATE INDEX IF NOT EXISTS idx_roupas_sku          ON roupas(sku);
 
+-- Tabela Caderninho (anotacoes)
+CREATE TABLE IF NOT EXISTS anotacoes (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  titulo      TEXT NOT NULL DEFAULT '',
+  conteudo    TEXT NOT NULL DEFAULT '',
+  cliente_id  UUID REFERENCES clientes(id) ON DELETE SET NULL,
+  pedido_id   UUID REFERENCES pedidos(id) ON DELETE SET NULL,
+  cor         TEXT NOT NULL DEFAULT '#facc15',
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_anotacoes_cliente ON anotacoes(cliente_id);
+CREATE INDEX IF NOT EXISTS idx_anotacoes_pedido  ON anotacoes(pedido_id);
+
 -- RLS (Row Level Security) — ative se precisar de auth
 -- ALTER TABLE roupas ENABLE ROW LEVEL SECURITY;

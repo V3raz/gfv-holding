@@ -80,8 +80,8 @@ class CrewLauncher:
             return f"❌ Erro ao carregar crew '{dept}': {e}"
 
         # Instancia e executa o crew
-        print(f"\n🚀 Lançando crew {dept.upper()} para o projeto '{project_name}'...")
-        print(f"📋 Brief: {task_brief[:120]}{'...' if len(task_brief) > 120 else ''}\n")
+        print(f"\n[CREW] Lancando crew {dept.upper()} para o projeto '{project_name}'...")
+        print(f"[BRIEF] {task_brief[:120]}{'...' if len(task_brief) > 120 else ''}\n")
 
         try:
             # DevCrew aceita project_path; os outros aceitam project_name
@@ -93,9 +93,9 @@ class CrewLauncher:
                     department=dept
                 )
             result = crew_instance.run(task_description=task_brief)
-            return f"✅ Crew {dept.upper()} concluiu.\n\n{result}"
+            return f"[OK] Crew {dept.upper()} concluiu.\n\n{result}"
         except Exception as e:
-            return f"❌ Erro durante execução do crew {dept.upper()}: {e}"
+            return f"[ERRO] Crew {dept.upper()}: {e}"
 
     def list_departments(self) -> str:
         """Retorna lista de departamentos disponíveis."""

@@ -1,0 +1,22 @@
+{
+  "projeto": "lagom_gestao",
+  "ultima_atualizacao": "2026-04-17",
+  "fase": "desenvolvimento",
+  "status_geral": "em_progresso",
+  "tarefas": [
+    { "id": 1, "descricao": "Criar frontend SPA", "status": "concluido", "agente": "jarvis" },
+    { "id": 2, "descricao": "Criar schema Supabase", "status": "concluido", "agente": "jarvis" },
+    { "id": 3, "descricao": "Criar projeto Supabase", "status": "concluido", "agente": "jarvis" },
+    { "id": 4, "descricao": "Criar repositório GitHub", "status": "concluido", "agente": "jarvis" },
+    { "id": 5, "descricao": "Copiar anon key para config.js", "status": "concluido", "agente": "jarvis" },
+    { "id": 6, "descricao": "Executar schema.sql no Supabase (5 tabelas: roupas, clientes, pedidos, itens_pedido, anotacoes)", "status": "concluido", "agente": "jarvis" },
+    { "id": 7, "descricao": "Testar CRUD completo no frontend local", "status": "pendente", "agente": "jarvis" },
+    { "id": 8, "descricao": "Deploy frontend (Vercel/Netlify)", "status": "pendente", "agente": "jarvis" }
+  ],
+  "credenciais": {
+    "supabase_url": "https://teesglrbfsjtwcnvdbbf.supabase.co",
+    "supabase_project_id": "teesglrbfsjtwcnvdbbf",
+    "supabase_anon_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlZXNnbHJiZnNqdHdjbnZkYmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDg1ODMsImV4cCI6MjA5MjAyNDU4M30.mANF21nrmqr2KS830F1gBk-IBdDJKqn5qxWBbIF_kwU",
+    "github_repo": "https://github.com/V3raz/gfv-holding"
+  }
+}
