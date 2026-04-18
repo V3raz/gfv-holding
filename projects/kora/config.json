@@ -1,15 +1,19 @@
 {
   "slug": "kora",
   "name": "Kora",
+  "display_name": "Kora — Personal Life OS",
   "created_at": "2026-04-17T16:28:23.642733",
-  "departments": [
-    "marketing",
-    "comercial",
-    "vendas",
-    "comunicacao",
-    "sac",
-    "financeiro"
-  ],
+  "tech_stack": {
+    "framework": "Next.js 15 (App Router)",
+    "language": "TypeScript",
+    "database": "Supabase (PostgreSQL)",
+    "auth": "Supabase Auth",
+    "deploy": "Vercel",
+    "ui": "TailwindCSS"
+  },
+  "repo": "https://github.com/V3raz/Kora",
+  "src_path": "projects/kora/src",
+  "departments": ["marketing", "comercial", "vendas", "comunicacao", "sac", "financeiro"],
   "status": "active",
   "tasks": []
 }

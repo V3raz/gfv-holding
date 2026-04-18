@@ -8,6 +8,9 @@ projects/*/frontend/js/config.js
 projects/*/memory/
 **/agent_state.json
 
+# Repos dos projetos (cada um tem seu próprio git)
+projects/kora/src/
+
 # Python
 __pycache__/
 *.py[cod]
