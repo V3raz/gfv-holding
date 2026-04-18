@@ -30,6 +30,12 @@ DEPARTMENT_MAP = {
 BASE_DIR      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECTS_DIR  = os.path.join(BASE_DIR, "projects")
 
+# Overrides de caminho: quando o código real não está em projects/
+# Chave = project_name (slug), Valor = caminho absoluto da pasta de código
+PROJECT_PATH_OVERRIDES = {
+    "lagom_gestao": r"C:\Users\Gustavo\Desktop\lagom-gestao",
+}
+
 
 class CrewLauncher:
     """
@@ -63,11 +69,15 @@ class CrewLauncher:
                 f"Disponíveis: {available}"
             )
 
-        # Valida projeto
-        project_path = os.path.join(PROJECTS_DIR, project_name)
+        # Resolve caminho do projeto (override tem prioridade)
+        if project_name in PROJECT_PATH_OVERRIDES:
+            project_path = PROJECT_PATH_OVERRIDES[project_name]
+        else:
+            project_path = os.path.join(PROJECTS_DIR, project_name)
+
         if not os.path.isdir(project_path):
             return (
-                f"❌ Projeto '{project_name}' não encontrado em {PROJECTS_DIR}.\n"
+                f"❌ Projeto '{project_name}' não encontrado em {project_path}.\n"
                 f"Use 'criar projeto {project_name}' primeiro."
             )
 
