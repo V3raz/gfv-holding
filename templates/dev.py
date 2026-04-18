@@ -1,25 +1,27 @@
 """
 Departamento DEV — Crew de Desenvolvimento de Software
-Hierarquia: DEV Manager (Gemini Pro) → Frontend Jr + Backend Jr (Gemini Flash)
+Hierarquia: DEV Manager (Groq) → Frontend Jr + Backend Jr (Groq)
 """
 
 import os
+import sys
 from crewai import Agent, Task, Crew, Process
-from crewai_tools import FileWriterTool, FileReadTool, DirectoryReadTool
 from templates.base_crew import BaseCrew, get_manager_llm, get_junior_llm
+from templates.tools import ler_arquivo, escrever_arquivo, listar_arquivos
+
+# Fix encoding UTF-8 no Windows
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stderr.encoding and sys.stderr.encoding.lower() != "utf-8":
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 
 class DevCrew(BaseCrew):
     def __init__(self, project_path: str):
-        # project_path: caminho absoluto da pasta do projeto (ex: .../projects/lagom_gestao)
+        # project_path: caminho absoluto da pasta do projeto
         self.project_path = project_path
         project_name = os.path.basename(project_path)
         super().__init__(project_name=project_name, department="dev")
-
-        # Ferramentas disponíveis para os agentes
-        self.file_writer  = FileWriterTool()
-        self.file_reader  = FileReadTool()
-        self.dir_reader   = DirectoryReadTool(directory=project_path)
 
     def run(self, task_description: str) -> str:
         """
@@ -43,8 +45,8 @@ class DevCrew(BaseCrew):
                 f"O projeto atual está em: {self.project_path}"
             ),
             llm=get_manager_llm(),
-            allow_delegation=True,
-            tools=[self.file_reader, self.dir_reader],
+            allow_delegation=False,
+            tools=[ler_arquivo, listar_arquivos],
             verbose=False,
         )
 
@@ -59,7 +61,7 @@ class DevCrew(BaseCrew):
             ),
             llm=get_junior_llm(),
             allow_delegation=False,
-            tools=[self.file_writer, self.file_reader],
+            tools=[ler_arquivo, escrever_arquivo],
             verbose=False,
         )
 
@@ -74,7 +76,7 @@ class DevCrew(BaseCrew):
             ),
             llm=get_junior_llm(),
             allow_delegation=False,
-            tools=[self.file_writer, self.file_reader],
+            tools=[ler_arquivo, escrever_arquivo],
             verbose=False,
         )
 
@@ -137,8 +139,8 @@ class DevCrew(BaseCrew):
         task_revisao = Task(
             description=(
                 "Revise toda a implementação e produza o relatório final.\n\n"
-                "1. Verifique com DirectoryReadTool se todos os arquivos planejados foram criados\n"
-                "2. Leia arquivos críticos com FileReadTool para validar qualidade básica\n"
+                "1. Leia os arquivos criados com FileReadTool para validar qualidade básica\n"
+                "2. Confirme que os arquivos existem e estão completos\n"
                 "3. Liste todos os arquivos criados/modificados\n"
                 "4. Aponte qualquer pendência ou problema identificado\n"
                 "5. Confirme se o brief foi atendido\n\n"
@@ -159,6 +161,7 @@ class DevCrew(BaseCrew):
             tasks=[task_planejar, task_frontend, task_backend, task_revisao],
             process=Process.sequential,
             verbose=True,
+            max_rpm=8,  # Limita requests/min para não estourar quota Groq
         )
 
         result = crew.kickoff()

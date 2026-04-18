@@ -7,16 +7,20 @@ from crewai import Agent, Task, Crew, Process
 # Troque para "gemini/gemini-1.5-flash" para quota maior no free tier do Gemini
 
 def get_manager_llm():
-    # Manager usa Gemini 2.0 Flash (barato, rápido, bom raciocínio)
-    return os.getenv("MANAGER_LLM", "gemini/gemini-2.0-flash")
+    # Manager: Groq se disponível (free), senão Gemini 1.5 Flash (tem free tier)
+    groq_key = os.getenv("GROQ_API_KEY", "")
+    if groq_key and groq_key not in ("COLE_SUA_KEY_AQUI", "sua_key_aqui"):
+        return os.getenv("MANAGER_LLM", "groq/llama-3.3-70b-versatile")
+    return os.getenv("MANAGER_LLM", "gemini/gemini-1.5-flash")
 
 
 def get_junior_llm():
-    # JRs usam Groq (GRÁTIS, 14.400 req/dia) — fallback Gemini 2.0 Flash
+    # JRs: llama-3.1-8b-instant (quota separada 20K TPM, mais rápido)
+    # Manager usa llama-3.3-70b → quotas independentes, evita rate limit
     groq_key = os.getenv("GROQ_API_KEY", "")
-    if groq_key and groq_key != "COLE_SUA_KEY_AQUI":
-        return os.getenv("JUNIOR_LLM", "groq/llama-3.3-70b-versatile")
-    return os.getenv("JUNIOR_LLM", "gemini/gemini-2.0-flash")
+    if groq_key and groq_key not in ("COLE_SUA_KEY_AQUI", "sua_key_aqui"):
+        return os.getenv("JUNIOR_LLM", "groq/llama-3.1-8b-instant")
+    return os.getenv("JUNIOR_LLM", "gemini/gemini-1.5-flash")
 
 
 class BaseCrew:
