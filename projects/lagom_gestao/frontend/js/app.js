@@ -39,10 +39,18 @@ async function navigate(path) {
   await route.module.initView();
 }
 
+// Normaliza hash: "estoque" → "/estoque", "/estoque" → "/estoque"
+function normalizePath(hash) {
+  const raw = hash.replace("#", "").replace(/^\/+/, "");
+  const withSlash = "/" + raw;
+  if (routes[withSlash]) return withSlash;
+  if (routes[raw])       return raw;
+  return DEFAULT_ROUTE;
+}
+
 // Escuta mudanças na hash
 window.addEventListener("hashchange", () => {
-  const path = window.location.hash.replace("#", "") || DEFAULT_ROUTE;
-  navigate(path);
+  navigate(normalizePath(window.location.hash));
 });
 
 // ── Init ──────────────────────────────────────────────────────
@@ -66,8 +74,8 @@ function initTopbar() {
 function init() {
   initSidebar();
   initTopbar();
-  const path = window.location.hash.replace("#", "") || DEFAULT_ROUTE;
-  window.location.hash = path; // dispara hashchange
+  // Navega diretamente — não depende de hashchange disparar
+  navigate(normalizePath(window.location.hash));
 }
 
 init();
