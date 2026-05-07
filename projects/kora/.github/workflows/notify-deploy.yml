@@ -1,0 +1,19 @@
+name: Notificar usuários após deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aguardar Vercel deployar
+        run: sleep 180
+
+      - name: Enviar notificação de atualização
+        run: |
+          curl -s -X POST "${{ secrets.KORA_URL }}/api/notif/deploy" \
+            -H "Content-Type: application/json" \
+            -H "x-deploy-secret: ${{ secrets.DEPLOY_SECRET }}" \
+            -d '{"titulo":"🚀 Kora atualizado!","mensagem":"Nova versão disponível. Recarregue o app para ver as novidades."}'
