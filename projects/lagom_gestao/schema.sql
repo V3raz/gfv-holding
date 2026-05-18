@@ -14,8 +14,31 @@ CREATE TABLE IF NOT EXISTS roupas (
   quantidade    INTEGER NOT NULL DEFAULT 0 CHECK (quantidade >= 0),
   preco         NUMERIC(10,2) NOT NULL DEFAULT 0,
   imagem_url    TEXT,
+  marca_id      UUID,
   created_at    TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Tabela de marcas (margem padrão por marca)
+CREATE TABLE IF NOT EXISTS marcas (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  nome          TEXT NOT NULL UNIQUE,
+  margem_padrao NUMERIC(6,2) NOT NULL DEFAULT 50 CHECK (margem_padrao >= 0),
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabela de categorias
+CREATE TABLE IF NOT EXISTS categorias (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  nome       TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- FK roupas → marcas (separada pra funcionar com IF NOT EXISTS acima)
+ALTER TABLE roupas DROP CONSTRAINT IF EXISTS roupas_marca_id_fkey;
+ALTER TABLE roupas
+  ADD CONSTRAINT roupas_marca_id_fkey
+  FOREIGN KEY (marca_id) REFERENCES marcas(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_roupas_marca_id ON roupas(marca_id);
 
 -- Tabela de clientes
 CREATE TABLE IF NOT EXISTS clientes (
@@ -70,5 +93,21 @@ CREATE TABLE IF NOT EXISTS anotacoes (
 CREATE INDEX IF NOT EXISTS idx_anotacoes_cliente ON anotacoes(cliente_id);
 CREATE INDEX IF NOT EXISTS idx_anotacoes_pedido  ON anotacoes(pedido_id);
 
--- RLS (Row Level Security) — ative se precisar de auth
--- ALTER TABLE roupas ENABLE ROW LEVEL SECURITY;
+-- RLS aberto pro anon (app usa anon key direto, sem login)
+ALTER TABLE roupas       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clientes     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pedidos      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE itens_pedido ENABLE ROW LEVEL SECURITY;
+ALTER TABLE anotacoes    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE marcas       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categorias   ENABLE ROW LEVEL SECURITY;
+
+DO $$
+DECLARE t text;
+BEGIN
+  FOR t IN SELECT unnest(ARRAY['roupas','clientes','pedidos','itens_pedido','anotacoes','marcas','categorias'])
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS "%s_all_anon" ON %I', t, t);
+    EXECUTE format('CREATE POLICY "%s_all_anon" ON %I FOR ALL TO anon USING (true) WITH CHECK (true)', t, t);
+  END LOOP;
+END $$;
