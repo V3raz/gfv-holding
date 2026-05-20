@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS roupas (
   categoria     TEXT NOT NULL DEFAULT 'Outro',
   quantidade    INTEGER NOT NULL DEFAULT 0 CHECK (quantidade >= 0),
   preco         NUMERIC(10,2) NOT NULL DEFAULT 0,
+  preco_custo   NUMERIC(10,2),
   imagem_url    TEXT,
   marca_id      UUID,
   created_at    TIMESTAMPTZ DEFAULT NOW()
